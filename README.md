@@ -18,7 +18,7 @@ The world has a problem that no one talks about which is the lonliness of inanim
 inanimate objects which they can swipe or match.
 
 ### The Problem (that doesn't exist)
-Many inanimate object around the world face lonliness
+Crushing loneliness of inanimate object on college campuses
 
 ### The Solution (that nobody asked for)
 Our mobile application 'Akale Oru Ishtam'
