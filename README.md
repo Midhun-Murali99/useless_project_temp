@@ -49,7 +49,7 @@ For Software:
 
 *Add caption explaining what this shows*
 
-<img width="500" height="400" alt="frame (3)" src="https://raw.githubusercontent.com/Midhun-Murali99/useless_project_temp/refs/heads/main/Untitled%20video%20-%20Made%20with%20Clipchamp%20(1).gif" />
+<img width="500" height="400" alt="frame (3)" src="https://github.com/Midhun-Murali99/useless_project_temp/blob/main/WhatsApp%20Image%202025-08-09%20at%2005.25.35.jpeg?raw=true />
 
 *Add caption explaining what this shows*
 
