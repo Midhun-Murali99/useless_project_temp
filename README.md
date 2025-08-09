@@ -45,7 +45,7 @@ expo start --android
 For Software:
 
 # Screenshots (Add at least 3)
-<img width="500" height="400" alt="frame (3)" src="https://raw.githubusercontent.com/Midhun-Murali99/useless_project_temp/refs/heads/main/Untitled%20video%20-%20Made%20with%20Clipchamp%20(1).gif" />
+<img width="500" height="400" alt="frame (3)" src="(https://github.com/Midhun-Murali99/useless_project_temp/blob/main/ChatGPT%20Image%20Aug%209,%202025,%2005_26_49%20AM.png?raw=true)" />
 
 *Add caption explaining what this shows*
 
@@ -58,8 +58,7 @@ For Software:
 *Add caption explaining what this shows*
 
 # Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
+<img width="500" height="400" alt="frame (3)" src="https://github.com/Midhun-Murali99/useless_project_temp/blob/main/ChatGPT%20Image%20Aug%209,%202025,%2005_26_49%20AM.png?raw=true" />
 
 ### Project Demo
 # Video
@@ -67,7 +66,7 @@ For Software:
 *Explain what the video demonstrates*
 
 ## Team Contributions
-- Sourav P Bijoy: Backend,frontend development
+- Sourav P Bijoy: Backend,frontend,ai development
 - Midhun Murali: frontend development
 
 ---
