@@ -45,7 +45,7 @@ expo start --android
 For Software:
 
 # Screenshots (Add at least 3)
-<img width="500" height="400" alt="frame (3)" src="(https://github.com/Midhun-Murali99/useless_project_temp/blob/main/ChatGPT%20Image%20Aug%209,%202025,%2005_26_49%20AM.png?raw=true)" />
+<img width="250" height="500" alt="frame (3)" src="https://github.com/Midhun-Murali99/useless_project_temp/blob/main/WhatsApp%20Image%202025-08-09%20at%2005.25.34.jpeg?raw=true" />
 
 *Add caption explaining what this shows*
 
