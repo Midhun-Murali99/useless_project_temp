@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  objects   Object[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Object {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String?
+  description String?
+  imageUrl    String
+  doomScore   Float        @default(50)
+  predictions Prediction[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Prediction {
+  id                 String   @id @default(cuid())
+  objectId           String
+  object             Object   @relation(fields: [objectId], references: [id], onDelete: Cascade)
+  prophecy           String
+  causeOfDeath       String
+  timeUntilDoom      String
+  lastWords          String
+  funeralNote        String
+  tone               String   @default("dark")
+  confidence         Float?
+  createdAt          DateTime @default(now())
+}
