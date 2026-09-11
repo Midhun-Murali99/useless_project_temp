@@ -6,7 +6,7 @@
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: [UselessDev]
 
 
 ### Team Members
