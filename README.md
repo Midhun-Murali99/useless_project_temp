@@ -49,10 +49,10 @@ npm run dev
 
 Open `http://localhost:3000` in a browser. Configure the required environment variables in `.env` before using AI prediction and database features.
 
-### Project Documentation
+###  Screenshots!
 For Software:
 
-# Screenshots![Landing Page](/src/start.jpeg)
+[Landing Page](/src/start.jpeg)
 
 *The DoomsDay loading Page.*
 
@@ -82,7 +82,7 @@ For Software:
 
 # Video
 
-[▶ Watch the Chicken 6 7 Demo Video](src/DemoVideo.mp4)
+[▶ Watch Demo Video](src/DemoVideo.mp4)
 
 
 # Additional Demos
