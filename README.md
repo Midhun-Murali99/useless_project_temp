@@ -82,7 +82,7 @@ For Software:
 
 # Video
 
-[▶ Watch Demo Video](src/DemoVideo.mp4)
+[▶ Watch Demo Video](src/demo.mp4)
 
 
 # Additional Demos
