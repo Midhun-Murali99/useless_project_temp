@@ -52,8 +52,19 @@ Open `http://localhost:3000` in a browser. Configure the required environment va
 ### Project Documentation
 For Software:
 
-# Screenshots
-Screenshots can be added here after capturing the upload, camera detection, and DoomOS result screens.
+# Screenshots![Landing Page](/src/start.jpeg)
+
+*The DoomsDay loading Page.*
+
+![Delivery Person Selection](/src/upload.jpeg)
+
+*Users can upload a image or capture images from the surroundings.*
+
+![Match Screen](/src/detail.jpeg)
+
+![Match Screen](/src/detail2.jpeg)
+
+*The results*
 
 # Workflow
 1. The user uploads an image or starts the live camera.
@@ -63,32 +74,23 @@ Screenshots can be added here after capturing the upload, camera detection, and 
 5. The AI generates a fictional DoomOS report.
 6. Prisma stores the object and prediction details, and the result is displayed to the user.
 
-For Hardware:
 
-# Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
+# Diagrams
 
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
+![Workflow](src/workflow.png)
 
-# Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
 
-![Build](Add photos of build process here)
-*Explain the build steps*
-
-![Final](Add photo of final product here)
-*Explain the final build*
-
-### Project Demo
 # Video
-Add the project demonstration video link here.
+
+[▶ Watch the Chicken 6 7 Demo Video](src/DemoVideo.mp4)
+
 
 # Additional Demos
-The application supports both upload-based prediction and real-time camera-based object analysis.
 
+* Live Demo: https://useless-project-temp-useless6.vercel.app/
+* GitHub Repository: https://github.com/Midhun-Murali99/useless_project_temp
+
+## Team Contributions
 ## Team Contributions
 - Midhun Murali: Project architecture, AI/API integration, database setup, real-time object detection, and camera analysis workflow.
 - P V Aadithyadev: Frontend development.

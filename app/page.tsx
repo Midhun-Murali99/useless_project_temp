@@ -27,7 +27,11 @@ const loadingMessages = [
   "Consulting the void...",
   "Calculating entropy...",
   "Negotiating with fate...",
+  "Inspecting the evidence...",
+  "Estimating object mortality...",
 ];
+
+const PREDICTION_TIMEOUT_MS = 60_000;
 
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -53,6 +57,7 @@ export default function HomePage() {
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
+  const [loadingElapsed, setLoadingElapsed] = useState(0);
   const [tone, setTone] = useState<Tone>("dark");
   const [inputMode, setInputMode] = useState<InputMode>("upload");
   const [capturedImage, setCapturedImage] = useState("");
@@ -67,6 +72,33 @@ export default function HomePage() {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem("doomsday-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLoadingElapsed(0);
+      return;
+    }
+
+    const startedAt = Date.now();
+    const timer = window.setInterval(() => {
+      setLoadingElapsed(Math.floor((Date.now() - startedAt) / 1000));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+
+    const timer = window.setInterval(() => {
+      setLoadingMessage((currentMessage) => {
+        const currentIndex = loadingMessages.indexOf(currentMessage);
+        return loadingMessages[(currentIndex + 1) % loadingMessages.length];
+      });
+    }, 4000);
+
+    return () => window.clearInterval(timer);
+  }, [isLoading]);
 
   function selectFile(nextFile: File | undefined) {
     if (!nextFile) return;
@@ -102,15 +134,29 @@ export default function HomePage() {
     setError("");
     setPrediction(null);
     setLoadingMessage(loadingMessages[Math.floor(Math.random() * loadingMessages.length)]);
+    let predictionTimeout: number | undefined;
 
     try {
       const image = imageOverride || capturedImage || (file ? await fileToDataUrl(file) : "");
+      const controller = new AbortController();
+      predictionTimeout = window.setTimeout(() => controller.abort(), PREDICTION_TIMEOUT_MS);
       const response = await fetch("/api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image, tone }),
+        signal: controller.signal,
       });
-      const result: unknown = await response.json();
+      const responseText = await response.text();
+      let result: unknown;
+      try {
+        result = JSON.parse(responseText) as unknown;
+      } catch {
+        throw new Error(
+          response.ok
+            ? "The prediction service returned an invalid response."
+            : `Prediction service error (${response.status}). Restart the server and try again.`,
+        );
+      }
 
       if (!response.ok) {
         const message =
@@ -125,8 +171,15 @@ export default function HomePage() {
 
       setPrediction(result as DoomPrediction);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Something went wrong.");
+      setError(
+        requestError instanceof DOMException && requestError.name === "AbortError"
+          ? "The prediction is taking too long. Please try again in a moment."
+          : requestError instanceof Error
+            ? requestError.message
+            : "Something went wrong.",
+      );
     } finally {
+      if (predictionTimeout !== undefined) window.clearTimeout(predictionTimeout);
       setIsLoading(false);
     }
   }
@@ -263,6 +316,25 @@ export default function HomePage() {
           >
             {isLoading ? loadingMessage : "Predict Doom"}
           </button>
+
+          {isLoading && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="mt-4 flex items-center gap-3 rounded-xl border border-[#4de4ff]/40 bg-[#10232d] px-4 py-3 text-sm text-slate-200"
+            >
+              <span
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-[#4de4ff]/30 border-t-[#4de4ff]"
+              />
+              <div className="min-w-0">
+                <p className="font-semibold text-[#4de4ff]">Doom analysis in progress</p>
+                <p className="truncate text-xs text-slate-400">
+                  The oracle is examining your image... {loadingElapsed}s elapsed
+                </p>
+              </div>
+            </div>
+          )}
 
           <label className="mt-4 block text-sm font-bold text-slate-400">
             Prophecy tone

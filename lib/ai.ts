@@ -57,17 +57,32 @@ function getImageData(image: string | Buffer): { data: string; mimeType: string 
   return { data: trimmedImage, mimeType: "image/jpeg" };
 }
 
+function isTransientProviderError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+
+  return (
+    error.message.includes('"code":503') ||
+    error.message.includes('"status":"UNAVAILABLE"') ||
+    error.message.includes("temporarily unavailable") ||
+    error.message.includes("high demand")
+  );
+}
+
+function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 export async function generateDoomPrediction(
   image: string | Buffer,
   tone: DoomTone = "dark",
 ): Promise<DoomPrediction> {
   const imageData = getImageData(image);
   const normalizedTone = tone;
-  const response = await getGoogleAI().models.generateContent({
+  const request = {
     model: "gemini-3.6-flash",
     contents: [
       {
-        role: "user",
+        role: "user" as const,
         parts: [
           {
             inlineData: imageData,
@@ -82,39 +97,56 @@ export async function generateDoomPrediction(
         ],
       },
     ],
-    config: {
-      systemInstruction: systemPrompt,
-      temperature: 0.9,
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          prophecy: { type: Type.STRING },
-          objectName: { type: Type.STRING },
-          shortDescription: { type: Type.STRING },
-          causeOfDeath: { type: Type.STRING },
-          timeUntilDoom: { type: Type.STRING },
-          lastWords: { type: Type.STRING },
-          funeralNote: { type: Type.STRING },
-          visualEvidence: { type: Type.ARRAY, items: { type: Type.STRING } },
-          confidence: { type: Type.NUMBER },
-          suggestedDoomScore: { type: Type.NUMBER },
+  };
+
+  let response;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      response = await getGoogleAI().models.generateContent({
+        ...request,
+        config: {
+          systemInstruction: systemPrompt,
+          temperature: 0.9,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              prophecy: { type: Type.STRING },
+              objectName: { type: Type.STRING },
+              shortDescription: { type: Type.STRING },
+              causeOfDeath: { type: Type.STRING },
+              timeUntilDoom: { type: Type.STRING },
+              lastWords: { type: Type.STRING },
+              funeralNote: { type: Type.STRING },
+              visualEvidence: { type: Type.ARRAY, items: { type: Type.STRING } },
+              confidence: { type: Type.NUMBER },
+              suggestedDoomScore: { type: Type.NUMBER },
+            },
+            required: [
+              "prophecy",
+              "objectName",
+              "shortDescription",
+              "causeOfDeath",
+              "timeUntilDoom",
+              "lastWords",
+              "funeralNote",
+              "visualEvidence",
+              "confidence",
+              "suggestedDoomScore",
+            ],
+          },
         },
-        required: [
-          "prophecy",
-          "objectName",
-          "shortDescription",
-          "causeOfDeath",
-          "timeUntilDoom",
-          "lastWords",
-          "funeralNote",
-          "visualEvidence",
-          "confidence",
-          "suggestedDoomScore",
-        ],
-      },
-    },
-  });
+      });
+      break;
+    } catch (error) {
+      if (!isTransientProviderError(error) || attempt === 2) throw error;
+      await wait(1000 * 2 ** attempt);
+    }
+  }
+
+  if (!response) {
+    throw new Error("The prediction service is temporarily unavailable. Please try again.");
+  }
 
   const content = response.text;
   if (!content) {

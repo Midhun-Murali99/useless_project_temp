@@ -62,6 +62,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ ...prediction, objectId: object.id });
   } catch (error) {
     console.error("Doom prediction failed", error);
-    return NextResponse.json({ error: "Unable to generate a doom prediction" }, { status: 500 });
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Unable to generate a doom prediction";
+    return NextResponse.json(
+      { error: `Unable to generate a doom prediction: ${message}` },
+      { status: 500 },
+    );
   }
 }
